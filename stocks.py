@@ -34,7 +34,7 @@ def fetch_data():
     data = yf.download(symbol, start, end)
     df = pd.DataFrame(data)
     output_name = ''+symbol+'.csv'
-    df.to_csv("./stocks data/" + output_name)
+    df.to_csv("./stocks_data/" + output_name)
     return data, df
 
 data, df = fetch_data()
