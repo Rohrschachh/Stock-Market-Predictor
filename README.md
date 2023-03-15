@@ -22,4 +22,4 @@ For Windows
 2. One prerequisite is Python version above 3.3 should be installed.[Download](https://www.python.org/downloads)
 3. After installation, run the [SetupWindows.bat](https://github.com/Rohrschachh/Stock-Market-Predictor/blob/master/Scripts/SetupWindows.bat) file again. If Python is installed properly, it will create a virtual environment and download the required packages. (This may take a longer amount of time)
 
-4. After successfully install [StartWindows.bat](https://github.com/Rohrschachh/Stock-Market-Predictor/blob/master/Scripts/StartWindows.bat) script will get executed automatically which will start the Streamlit App on [http://localhost:8501](http://localhost:8501).
+4. After successfully install you can choose to run the app or Run the app manually after activating virtual environment use command `streamlit run stocks.py` in root folder which will start the Streamlit App on [http://localhost:8501](http://localhost:8501)

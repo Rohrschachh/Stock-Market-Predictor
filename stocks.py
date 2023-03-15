@@ -1,5 +1,6 @@
 
 # Importing all required libraries
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,6 +35,7 @@ def fetch_data():
     data = yf.download(symbol, start, end)
     df = pd.DataFrame(data)
     output_name = ''+symbol+'.csv'
+    Path("stocks_data").mkdir(parents=True, exist_ok=True)
     df.to_csv("./stocks_data/" + output_name)
     return data, df
 
