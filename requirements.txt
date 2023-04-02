@@ -6,3 +6,6 @@ scikit-learn
 keras
 matplotlib
 tensorflow
+plotly
+stocknews
+matplotlib

@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 plt.style.use('ggplot')
 
 import yfinance as yf
@@ -20,7 +21,7 @@ import plotly.graph_objects as go
 
 from stocknews import StockNews
 
-from nsetools import Nse
+# from nsetools import Nse
 
 # nse = Nse()
 
@@ -48,8 +49,9 @@ symbol, start, end = input_para()
 def fetch_data():
     data = yf.download(symbol, start, end)
     df = pd.DataFrame(data)
+    Path("stocks_data").mkdir(parent=True, exist_ok=True)
     output_name = ''+symbol+'.csv'
-    df.to_csv("./stocks data/" + output_name)
+    df.to_csv("./stocks_data/" + output_name)
 
     # ticker = yf.Ticker(symbol)
     # company = ticker.info['longName']

@@ -12,7 +12,7 @@ import datetime
 
 yf.pdr_override()
 
-from keras.models import load_model 
+# from keras.models import load_model 
 
 import math
 from sklearn.metrics import mean_squared_error

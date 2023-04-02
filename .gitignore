@@ -3,6 +3,7 @@
 .venv/*
 stocks_data/*
 *.h5
+data
 
 __pycache__/
 *.py[cod]
