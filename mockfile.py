@@ -49,7 +49,7 @@ symbol, start, end = input_para()
 def fetch_data():
     data = yf.download(symbol, start, end)
     df = pd.DataFrame(data)
-    Path("stocks_data").mkdir(parent=True, exist_ok=True)
+    Path("stocks_data").mkdir(parents=True, exist_ok=True)
     output_name = ''+symbol+'.csv'
     df.to_csv("./stocks_data/" + output_name)
 

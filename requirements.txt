@@ -9,3 +9,6 @@ tensorflow
 plotly
 stocknews
 matplotlib
+flask
+Flask-cors
+joblib
