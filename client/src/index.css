@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply m-0 box-border bg-gray-100 p-0 text-slate-950 antialiased dark:bg-slate-950 dark:text-white;
+}
