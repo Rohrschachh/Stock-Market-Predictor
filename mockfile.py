@@ -66,6 +66,33 @@ def fetch_data():
 data, df = fetch_data()
 
 
+def showPriorityData(ticker):
+
+    data3 = yf.download(ticker,start, end)
+    data3_df = pd.DataFrame(data3)
+
+    data3_df['% Change'] = data3_df['Adj Close'] / data3_df['Adj Close'].shift(1) - 1
+
+    stkchng_data = "{:.2f}".format(data3_df.iloc[-1]['% Change'])
+    currprice_data = "{:.2f}".format(data3_df.iloc[-1]['Adj Close'])
+
+    return stkchng_data, currprice_data
+
+stkchng_nifty, currprice_nifty = showPriorityData('^NSEI')
+
+stkchng_sensex, currprice_sensex = showPriorityData('^BSESN')
+
+nifty, sensex = st.columns(2)
+
+with nifty:
+    st.subheader("NIFTY 50 (^NSEI)")
+    nifty.metric("NSE - NSE Real Time Price. Currency in INR", currprice_nifty, stkchng_nifty)
+
+with sensex:
+    st.subheader("S&P BSE SENSEX (^BSESN)")
+    sensex.metric("BSE - BSE Real Time Price. Currency in INR", currprice_sensex, stkchng_sensex)
+
+
 def show_data():
 
     st.title(symbol)
