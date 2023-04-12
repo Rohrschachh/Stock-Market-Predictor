@@ -6,6 +6,7 @@ import Header from "./layout/Header";
 import {
   APIChartResponse,
   APILSTMPredictionResponse,
+  APILinRegPredictionResponse,
 } from "./types/StockPricePredictionAPI";
 import AppContext from "./context/AppContext";
 import { AreaChart } from "./components/AreaChart";
@@ -17,6 +18,8 @@ export default function App() {
   const [lstmState, setLstmState] = useState<null | APILSTMPredictionResponse>(
     null
   );
+  const [linregState, setLinregState] =
+    useState<null | APILinRegPredictionResponse>(null);
 
   const getChartData = async () => {
     const url = new URL("/api/chartdata", `${import.meta.env.VITE_SERVER_URL}`);
@@ -28,8 +31,11 @@ export default function App() {
     setChartState(data);
   };
 
-  const getPrediction = async () => {
-    const url = new URL("/api/predict", `${import.meta.env.VITE_SERVER_URL}`);
+  const getLSTMPrediction = async () => {
+    const url = new URL(
+      "/api/predict/lstm",
+      `${import.meta.env.VITE_SERVER_URL}`
+    );
     url.searchParams.set("name", ticker);
     const data: APILSTMPredictionResponse = await fetch(url).then((res) =>
       res.json()
@@ -37,9 +43,22 @@ export default function App() {
     setLstmState(data);
   };
 
+  const getLinRegPrediction = async () => {
+    const url = new URL(
+      "/api/predict/linreg",
+      `${import.meta.env.VITE_SERVER_URL}`
+    );
+    url.searchParams.set("name", ticker);
+    const data: APILinRegPredictionResponse = await fetch(url).then((res) =>
+      res.json()
+    );
+    setLinregState(data);
+  };
+
   useEffect(() => {
     getChartData();
-    getPrediction();
+    getLSTMPrediction();
+    getLinRegPrediction();
   }, [ticker]);
 
   return (
@@ -76,6 +95,10 @@ export default function App() {
               ]}
             />
             <AreaChart
+              id="lstmpred"
+              text={`LSTM Prediction: ${
+                lstmState ? lstmState.predictionLstm : ""
+              }`}
               categories={lstmState ? lstmState.categories : []}
               series={[
                 {
@@ -85,6 +108,23 @@ export default function App() {
                 {
                   name: "Predicted Price",
                   data: lstmState ? lstmState.predicatedData : [],
+                },
+              ]}
+            />
+            <AreaChart
+              id="linregpred"
+              text={`Linear Regression Prediction: ${
+                linregState ? linregState.predictionLinReg : ""
+              }`}
+              categories={linregState ? linregState.categories : []}
+              series={[
+                {
+                  name: "Original Price",
+                  data: linregState ? linregState.realData : [],
+                },
+                {
+                  name: "Predicted Price",
+                  data: linregState ? linregState.predicatedData : [],
                 },
               ]}
             />

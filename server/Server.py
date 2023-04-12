@@ -37,10 +37,15 @@ def getStockNews():
     pageSize = request.args.get("pagesize")
     return News.GetStockNews(stockname, page, pageSize)
 
-@application.route("/api/predict")
+@application.route("/api/predict/lstm")
 def predictLSTM():
     stockName = request.args.get("name")
-    return Stocks.PredictionLSTM(stockName, "2023-03-31")
+    return Stocks.PredictionLSTM(stockName, today)
+
+@application.route("/api/predict/linreg")
+def predictLinReg():
+    stockName = request.args.get("name")
+    return Stocks.PredictionLinReg(stockName, today)
 
 if __name__ == "__main__":
     application.run(debug=True, host='0.0.0.0', port=5000)
