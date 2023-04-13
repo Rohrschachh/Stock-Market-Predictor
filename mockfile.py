@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 plt.style.use('ggplot')
 
 import yfinance as yf
@@ -20,7 +21,7 @@ import plotly.graph_objects as go
 
 from stocknews import StockNews
 
-from nsetools import Nse
+# from nsetools import Nse
 
 # nse = Nse()
 
@@ -48,8 +49,9 @@ symbol, start, end = input_para()
 def fetch_data():
     data = yf.download(symbol, start, end)
     df = pd.DataFrame(data)
+    Path("stocks_data").mkdir(parents=True, exist_ok=True)
     output_name = ''+symbol+'.csv'
-    df.to_csv("./stocks data/" + output_name)
+    df.to_csv("./stocks_data/" + output_name)
 
     # ticker = yf.Ticker(symbol)
     # company = ticker.info['longName']
@@ -62,6 +64,33 @@ def fetch_data():
     return data, df
 
 data, df = fetch_data()
+
+
+def showPriorityData(ticker):
+
+    data3 = yf.download(ticker,start, end)
+    data3_df = pd.DataFrame(data3)
+
+    data3_df['% Change'] = data3_df['Adj Close'] / data3_df['Adj Close'].shift(1) - 1
+
+    stkchng_data = "{:.2f}".format(data3_df.iloc[-1]['% Change'])
+    currprice_data = "{:.2f}".format(data3_df.iloc[-1]['Adj Close'])
+
+    return stkchng_data, currprice_data
+
+stkchng_nifty, currprice_nifty = showPriorityData('^NSEI')
+
+stkchng_sensex, currprice_sensex = showPriorityData('^BSESN')
+
+nifty, sensex = st.columns(2)
+
+with nifty:
+    st.subheader("NIFTY 50 (^NSEI)")
+    nifty.metric("NSE - NSE Real Time Price. Currency in INR", currprice_nifty, stkchng_nifty)
+
+with sensex:
+    st.subheader("S&P BSE SENSEX (^BSESN)")
+    sensex.metric("BSE - BSE Real Time Price. Currency in INR", currprice_sensex, stkchng_sensex)
 
 
 def show_data():

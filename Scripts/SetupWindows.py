@@ -94,7 +94,7 @@ class ProjectSetupWindows:
             permissionGranted = (reply == "y")
             
         print("\nStarting application...")
-        subprocess.call([os.path.abspath("./.venv/Scripts/streamlit"), "run", "stocks.py"])
+        subprocess.call([os.path.abspath("./.venv/Scripts/streamlit"), "run", "mockfile.py"])
 
 if __name__ == "__main__":
     ProjectSetupWindows.Validate()
