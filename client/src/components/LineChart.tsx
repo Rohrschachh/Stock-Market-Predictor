@@ -12,7 +12,7 @@ const options: ApexOptions = {
     },
   },
   title: {
-    text: "Adjcacent Close",
+    text: "Adjacent Close",
     align: "left",
     style: {
       fontSize: "16px",
