@@ -47,7 +47,7 @@ class Stocks:
         data_test = df.iloc[int(len(df)*.80): int(len(df))]
         categories = data_test["Date"].values
         
-        forecast_out = int(7)
+        forecast_out = int(1)
 
         df['Close after n days'] = df['Close'].shift(-forecast_out)
         df_new = df[['Close', 'Close after n days']]
@@ -96,7 +96,7 @@ class Stocks:
             data = round(tempPred[i][0], 2)
             pred_data.append(data)
         
-        final_categories = categories.tolist()[7:]
+        final_categories = categories.tolist()
         print(len(final_categories))
         print(len(pred_data))
         print(len(real_data))
