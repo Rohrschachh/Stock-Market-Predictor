@@ -29,6 +29,15 @@ export type APILSTMPredictionResponse = {
   predicatedData: number[];
 };
 
+export type APILinRegPredictionResponse = {
+  status: 200;
+  predictionLinReg: number;
+  errorPercentage: number;
+  categories: string[];
+  realData: number[];
+  predicatedData: number[];
+};
+
 export type APINewsStocksResponse = {
   status: 200 | 403 | 400;
   news: {

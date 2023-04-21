@@ -1,7 +1,8 @@
 import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
 
 export interface IAreaChartProps {
+  id: string;
+  text: string;
   categories: string[];
   series: [
     {
@@ -21,7 +22,7 @@ export function AreaChart(props: IAreaChartProps) {
       <ReactApexChart
         options={{
           chart: {
-            id: "LSTMAreaChart",
+            id: props.id,
             type: "area",
             height: 400,
             zoom: {
@@ -29,7 +30,7 @@ export function AreaChart(props: IAreaChartProps) {
             },
           },
           title: {
-            text: "LSTM Prediction Chart",
+            text: props.text,
             align: "left",
             style: {
               fontSize: "16px",
