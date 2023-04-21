@@ -12,8 +12,6 @@ import datetime
 
 yf.pdr_override()
 
-from keras.models import load_model 
-
 import math
 from sklearn.metrics import mean_squared_error
 
@@ -21,11 +19,8 @@ import plotly.graph_objects as go
 
 from stocknews import StockNews
 
-# from nsetools import Nse
 
-# nse = Nse()
-
-# st.set_page_config(layout='wide', initial_sidebar_state='expanded')
+st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 
 # Input parameters
@@ -53,19 +48,12 @@ def fetch_data():
     output_name = ''+symbol+'.csv'
     df.to_csv("./stocks_data/" + output_name)
 
-    # ticker = yf.Ticker(symbol)
-    # company = ticker.info['longName']
-
-    # qt =  pd.DataFrame(nse.get_stock_codes().items(), columns=['SYMBOL', 'NAME OF COMPANY'])
-    # qt = qt.iloc[1:]
-    
-    # selectedstk = st.sidebar.selectbox('Select Stock', qt["SYMBOL"])
-
     return data, df
 
 data, df = fetch_data()
 
 
+# Show the Nifty50 and Sensex data 
 def showPriorityData(ticker):
 
     data3 = yf.download(ticker,start, end)
@@ -93,6 +81,8 @@ with sensex:
     sensex.metric("BSE - BSE Real Time Price. Currency in INR", currprice_sensex, stkchng_sensex)
 
 
+# Displaying the items on the WebPage
+
 def show_data():
 
     st.title(symbol)
@@ -116,7 +106,16 @@ def show_data():
 
     # Adjusted Close Price
     # st.subheader(f"Adjusted Close Price\n {symbol}")
-    st.line_chart(data['Adj Close'])
+    # st.line_chart(data['Adj Close'])
+    st.subheader('Closing Price VS Time Chart with 100MA & 200MA ')
+    ma100 = df.Close.rolling(100).mean()
+    ma200 = df.Close.rolling(200).mean()
+    fig4 = plt.Figure(figsize = (16, 8))
+    plt.plot(ma100, 'red')
+    plt.plot(ma200, 'green')
+    plt.plot(data['Adj Close'], 'blue')
+    plt.legend()
+    st.pyplot(fig4)
 
     # Displayed Candlesticks Graph
     st.subheader(f"Candlestick Representation of  {symbol}")
@@ -137,15 +136,13 @@ def lstm_analysis(df):
 
     training_set = df.iloc[:,4:5].values
 
-    #Scaling down the model data
+    # Scaling down the model data
     from sklearn.preprocessing import MinMaxScaler
 
     scaler = MinMaxScaler(feature_range = (0,1))
 
     data_train_arr = scaler.fit_transform(training_set)
 
-    # # Loading the Model
-    # model = load_model('model.h5')
 
     # Dividing the data into xtrain and ytrain
 
@@ -193,6 +190,7 @@ def lstm_analysis(df):
     # Compiling the model and loss is defined as mse 
     model.compile(optimizer = 'adam', loss = 'mean_squared_error') 
 
+    # Defining the Epochs and fitting the model
     model.fit(x_train, y_train, epochs = 30)
 
     # Testing Parameters
@@ -218,23 +216,15 @@ def lstm_analysis(df):
 
     y_predict = scaler.inverse_transform(y_predict)
 
-    # scaler = scaler.scale_
-
-    # scale_factor = 1 / scaler[0]
-    # y_predict = y_predict * scale_factor
 
     # Final Graph
-    # st.subheader('Predictions vs Original Price')
 
     fig2 = plt.figure(figsize = (8, 5), dpi=70)
     plt.plot(real_stock_price, 'red', label = 'Original Price')
     plt.plot(y_predict, 'blue', label = 'Predicted Price')
 
-    # plt.xlabel('Time')
-    # plt.ylabel('Price')
-
     plt.legend()
-    # Here we are directly showing the results to the client and not images for better UE
+    
     st.pyplot(fig2)
 
     # Calibrating the Errors
@@ -245,12 +235,9 @@ def lstm_analysis(df):
 
     lstm_pred = forecast_price[0,0]
 
-    st.write("Tomorrow's ",symbol," Closing Price Prediction by LSTM: ",lstm_pred)
-    # st.write("LSTM RMSE: ", lstm_err)
+    return lstm_err, lstm_pred, fig2
 
-    return lstm_err
-
-lstm_err = lstm_analysis(df)
+lstm_err, lstm_pred, fig2 = lstm_analysis(df)
 
 
 # """************************* LinReg SECTION ********************************"""
@@ -294,18 +281,13 @@ def lin_reg_analysis(df):
     # Testing
     y_predict = lin_mod.predict(x_test)
 
-    # scaler = scaler.scale_
-
     scale_factor = 1.04
-    # y_predict = y_predict * scale_factor
-    # y_test = y_test * scale_factor
 
     fig = plt.figure(figsize = (8, 5), dpi=70)
     plt.plot(y_test, 'red', label = 'Original Price')
     plt.plot(y_predict, 'blue', label = 'Predicted Price')
 
     plt.legend()
-    st.pyplot(fig)
 
     lin_reg_err = math.sqrt(mean_squared_error(y_test, y_predict))
 
@@ -317,20 +299,27 @@ def lin_reg_analysis(df):
     mean = forecast_set.mean()
     lin_reg_pred = forecast_set[0, 0]
 
+    return df, lin_reg_err, mean, forecast_set, lin_reg_pred, fig
+
+df, lin_reg_err, mean, forecast_set, lin_reg_pred, fig = lin_reg_analysis(df)
+
+
+
+col1, col2 = st.columns(2, gap="medium")
+
+with col1:    
+    st.subheader("LSTM Prediction")
+    st.pyplot(fig2)
+    st.write("Tomorrow's ",symbol," Closing Price Prediction by LSTM: ",lstm_pred)
+
+with col2:
+    st.subheader("Linear Regression Prediction")
+    st.pyplot(fig)
     st.write("Tomorrow's ", symbol," Closing Price Prediction by Linear Regression: ", lin_reg_pred)
-    # st.write("Linear Regression RMSE:", lin_reg_err)
-
-    return df, lin_reg_err, mean, forecast_set, lin_reg_pred
-
-df, lin_reg_err, mean, forecast_set, lin_reg_pred = lin_reg_analysis(df)
-
-
-# st.write("Forecasted Prices for Next 7 days:")
-# st.write(forecast_set)
 
 
 # Making new Tabs 
-news, pricing_data = st.tabs(["Top 10 News", "Pricing Data"])
+news, forecast_data = st.tabs(["Top 10 News", "Next 7 Days Prediction"])
 
 with news:
     st.header(f'News of {symbol}')
@@ -347,15 +336,7 @@ with news:
         st.write(f'News Sentiment {news_sentiment}')
 
 
-with pricing_data:
-    st.header('Price Movements')
-    data2 = data
-    data2['% Change'] = data['Adj Close'] / data['Adj Close'].shift(1) - 1
-    data2.dropna(inplace = True)
-    st.write(data2)
-    annual_return = data2['% Change'].mean()*252*100
-    st.write('Annual Return is ', annual_return, '%')
-    std_dev = np.std(data2['% Change'])*np.sqrt(252)*100
-    st.write('Standard Deviation is ', std_dev, '%')
-    risk_adj = annual_return / (std_dev*100)
-    st.write('Risk Adj. Return is ', risk_adj)
+with forecast_data:
+    st.write("Forecasted Prices for Next 7 days:")
+    st.line_chart(forecast_set)
+    # st.write(forecast_set)
