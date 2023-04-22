@@ -40,7 +40,6 @@ class Stocks:
         if not os.path.exists(f"models\{ticker}-LR.pkl"):
             cls.trainLinearRegression(ticker, today)
         #prediction code
-        print("Predicting please wait")
         df = pd.read_csv(f"data/{ticker}.csv")
         model = joblib.load(f"./models/{ticker}-LR.pkl")
         
@@ -98,16 +97,14 @@ class Stocks:
             pred_data.append(data)
         
         final_categories = categories.tolist()
-        print(len(final_categories))
-        print(len(pred_data))
-        print(len(real_data))
         response = {
             "status": ServerStatusCodes.SUCCESS.value,
             "predictionLinReg": lin_reg_pred.astype("float").round(2),
             "errorPercentage": round(lin_reg_err, 2),
             "realData": real_data,
             "predicatedData": pred_data,
-            "categories": final_categories
+            "categories": final_categories,
+            "date": f"{final_categories[-1]}"
         }
         return jsonify(response)
     
@@ -117,7 +114,6 @@ class Stocks:
         if not os.path.exists(f"models\{ticker}-LSTM.pkl"):
             cls.trainLstmModel(ticker, today)
         # prediction code
-        print("Predicting please wait")
         df = pd.read_csv(f"data/{ticker}.csv")
         model = joblib.load(f"./models/{ticker}-LSTM.pkl")
         
@@ -193,7 +189,8 @@ class Stocks:
             "errorPercentage": round(lstm_err, 2),
             "realData": real_data,
             "predicatedData": pred_data,
-            "categories": final_category
+            "categories": final_category,
+            "date": f"{final_category[-1]}"
         }
         return jsonify(response)
 

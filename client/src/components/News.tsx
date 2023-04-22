@@ -88,9 +88,17 @@ export function NewsComponent(props: INewsComponentProps) {
               <span className="text-sm font-bold">{n.title}</span>
               <p className="truncate text-sm">{n.summary}</p>
               <p className="">{new Date(n.date).toLocaleDateString()}</p>
-              <div className="flex justify-end gap-4">
-                <span>{n.sentimentSummary}</span>
-                <span>{n.sentimentTitle}</span>
+              <div className="flex flex-col py-2 text-sm">
+                <div>
+                  Sentiment Summary:{" "}
+                  <span className="text-md font-bold">
+                    {n.sentimentSummary}
+                  </span>
+                </div>
+                <div>
+                  Sentiment Title:{" "}
+                  <span className="text-md font-bold">{n.sentimentTitle}</span>
+                </div>
               </div>
             </div>
           ))}

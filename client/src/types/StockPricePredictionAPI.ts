@@ -13,6 +13,7 @@ export type APIChartResponse = {
   dayOpen: number;
   dayHigh: number;
   dayLow: number;
+  date: string;
 };
 
 export type APITickerValidityResponse = {
@@ -27,6 +28,7 @@ export type APILSTMPredictionResponse = {
   categories: string[];
   realData: number[];
   predicatedData: number[];
+  date: string;
 };
 
 export type APILinRegPredictionResponse = {
@@ -36,6 +38,7 @@ export type APILinRegPredictionResponse = {
   categories: string[];
   realData: number[];
   predicatedData: number[];
+  date: string;
 };
 
 export type APINewsStocksResponse = {

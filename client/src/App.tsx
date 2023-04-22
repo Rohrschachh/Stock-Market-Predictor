@@ -68,9 +68,17 @@ export default function App() {
         <main className="flex py-6 sm:py-10 xl:pt-0">
           <div className="flex w-full flex-col">
             <h1 className="mb-4 text-3xl font-bold text-slate-900">{ticker}</h1>
+            <h2 className="my-4 font-bold">
+              Stats for{" "}
+              <span className="text-lg text-cyan-600">
+                {chartState
+                  ? new Date(chartState.date).toLocaleDateString("in")
+                  : ""}
+              </span>
+            </h2>
             <div className="grid w-auto grid-cols-2 gap-2 lg:grid-cols-4">
               <DetailsCard
-                title="Current Price"
+                title={`Closing price`}
                 price={chartState ? chartState.currentPrice : 0.0}
                 priceChange={chartState?.priceStatus}
               />
@@ -86,6 +94,21 @@ export default function App() {
                 title="Day Low"
                 price={chartState ? chartState.dayLow : 0.0}
               />
+            </div>
+            <div>
+              <h2 className="my-4 font-bold">
+                Prediction for next working day
+              </h2>
+              <div className="grid grid-cols-2 gap-2">
+                <DetailsCard
+                  title="LSTM prediction"
+                  price={lstmState ? lstmState.predictionLstm : 0}
+                />
+                <DetailsCard
+                  title="Linear Regression prediction"
+                  price={linregState ? linregState.predictionLinReg : 0}
+                />
+              </div>
             </div>
             <CandleChart
               series={[
