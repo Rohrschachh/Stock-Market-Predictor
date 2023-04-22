@@ -40,14 +40,14 @@ class Stocks:
         if not os.path.exists(f"models\{ticker}-LR.pkl"):
             cls.trainLinearRegression(ticker, today)
         #prediction code
-        print("Predicting please wait")
         df = pd.read_csv(f"data/{ticker}.csv")
         model = joblib.load(f"./models/{ticker}-LR.pkl")
         
         data_test = df.iloc[int(len(df)*.80): int(len(df))]
         categories = data_test["Date"].values
+        categories = np.delete(categories, 0, axis=0)
         
-        forecast_out = int(7)
+        forecast_out = int(1)
 
         df['Close after n days'] = df['Close'].shift(-forecast_out)
         df_new = df[['Close', 'Close after n days']]
@@ -96,17 +96,15 @@ class Stocks:
             data = round(tempPred[i][0], 2)
             pred_data.append(data)
         
-        final_categories = categories.tolist()[7:]
-        print(len(final_categories))
-        print(len(pred_data))
-        print(len(real_data))
+        final_categories = categories.tolist()
         response = {
             "status": ServerStatusCodes.SUCCESS.value,
             "predictionLinReg": lin_reg_pred.astype("float").round(2),
             "errorPercentage": round(lin_reg_err, 2),
             "realData": real_data,
             "predicatedData": pred_data,
-            "categories": final_categories
+            "categories": final_categories,
+            "date": f"{final_categories[-1]}"
         }
         return jsonify(response)
     
@@ -116,7 +114,6 @@ class Stocks:
         if not os.path.exists(f"models\{ticker}-LSTM.pkl"):
             cls.trainLstmModel(ticker, today)
         # prediction code
-        print("Predicting please wait")
         df = pd.read_csv(f"data/{ticker}.csv")
         model = joblib.load(f"./models/{ticker}-LSTM.pkl")
         
@@ -192,7 +189,8 @@ class Stocks:
             "errorPercentage": round(lstm_err, 2),
             "realData": real_data,
             "predicatedData": pred_data,
-            "categories": final_category
+            "categories": final_category,
+            "date": f"{final_category[-1]}"
         }
         return jsonify(response)
 

@@ -57,6 +57,7 @@ class Chart:
             "dayOpen": dayOpen,
             "dayHigh": dayHigh,
             "dayLow": dayLow,
+            "date": data.iloc[-1]["Date"]
         }
         return jsonify(response)
             
