@@ -46,6 +46,7 @@ class Stocks:
         
         data_test = df.iloc[int(len(df)*.80): int(len(df))]
         categories = data_test["Date"].values
+        categories = np.delete(categories, 0, axis=0)
         
         forecast_out = int(1)
 
