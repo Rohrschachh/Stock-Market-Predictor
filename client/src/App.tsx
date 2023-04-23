@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { CandleChart } from "./components/CandleChart";
 import { DetailsCard } from "./components/DetailsCard";
-import { LineChart } from "./components/LineChart";
 import Header from "./layout/Header";
 import {
   APIChartResponse,
@@ -9,8 +7,8 @@ import {
   APILinRegPredictionResponse,
 } from "./types/StockPricePredictionAPI";
 import AppContext from "./context/AppContext";
-import { AreaChart } from "./components/AreaChart";
 import { NewsComponent } from "./components/News";
+import { Charts } from "./components/Charts";
 
 export default function App() {
   const { ticker } = useContext(AppContext);
@@ -110,54 +108,10 @@ export default function App() {
                 />
               </div>
             </div>
-            <CandleChart
-              series={[
-                {
-                  data: chartState ? chartState.candleChart : [],
-                },
-              ]}
-            />
-            <AreaChart
-              id="lstmpred"
-              text={`LSTM Prediction: ${
-                lstmState ? lstmState.predictionLstm : ""
-              }`}
-              categories={lstmState ? lstmState.categories : []}
-              series={[
-                {
-                  name: "Original Price",
-                  data: lstmState ? lstmState.realData : [],
-                },
-                {
-                  name: "Predicted Price",
-                  data: lstmState ? lstmState.predicatedData : [],
-                },
-              ]}
-            />
-            <AreaChart
-              id="linregpred"
-              text={`Linear Regression Prediction: ${
-                linregState ? linregState.predictionLinReg : ""
-              }`}
-              categories={linregState ? linregState.categories : []}
-              series={[
-                {
-                  name: "Original Price",
-                  data: linregState ? linregState.realData : [],
-                },
-                {
-                  name: "Predicted Price",
-                  data: linregState ? linregState.predicatedData : [],
-                },
-              ]}
-            />
-            <LineChart
-              series={[
-                {
-                  name: "Adj Close",
-                  data: chartState ? chartState.adjacentCloseChart : [],
-                },
-              ]}
+            <Charts
+              chartState={chartState}
+              lstmState={lstmState}
+              linregState={linregState}
             />
           </div>
         </main>
