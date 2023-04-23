@@ -8,7 +8,7 @@ import {
 } from "./types/StockPricePredictionAPI";
 import AppContext from "./context/AppContext";
 import { NewsComponent } from "./components/News";
-import { Charts } from "./components/Charts";
+import Charts from "./components/Charts";
 
 export default function App() {
   const { ticker } = useContext(AppContext);

@@ -1,13 +1,23 @@
-import { Props } from "react-apexcharts";
 import { AreaChart } from "./AreaChart";
 import { CandleChart } from "./CandleChart";
 import { LineChart } from "./LineChart";
+import {
+  APIChartResponse,
+  APILSTMPredictionResponse,
+  APILinRegPredictionResponse,
+} from "../types/StockPricePredictionAPI";
 
-export function Charts({
+export interface IChartsProps {
+  chartState: APIChartResponse | null;
+  lstmState: APILSTMPredictionResponse | null;
+  linregState: APILinRegPredictionResponse | null;
+}
+
+export default function Charts({
   chartState,
   lstmState,
   linregState,
-}: Props): JSX.Element {
+}: IChartsProps) {
   return (
     <div>
       <CandleChart
